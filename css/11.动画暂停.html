@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		.box {
+			margin: 100px auto;
+			width: 100px;
+			height: 100px;
+			background-color: red;
+			animation: rotate 1s linear infinite;
+		}
+		.box:hover {
+			animation-play-state: paused;
+		}
+		@keyframes rotate {
+			0% {
+				transform: rotate(0);
+			}
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="box"></div>
+</body>
+</html>

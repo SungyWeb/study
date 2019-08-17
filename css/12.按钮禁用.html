@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		button {
+			width: 100px;
+			height: 30px;
+			background: #abc;
+			border-radius: 5px;
+			border: 0;
+		}
+		button:disabled {
+			background-color: #eee;
+			cursor: not-allowed;
+		}
+	</style>
+</head>
+<body>
+	<button id="btn">按钮</button>
+	<button id="btn1" disabled>按钮1</button>
+	<script type="text/javascript">
+		var btn = document.getElementById('btn');
+		var timer = null;
+		btn.onclick = function(e) {
+			console.log('1');	
+			if(timer) return;
+			console.log(2);
+			var el = e.target;
+			el.disabled = true;
+			timer = setTimeout(function() {
+				el.removeAttribute('disabled');
+				timer = null;
+			}, 4000);
+		}
+		// 设置了disabled 不会触发click
+		var btn1 = document.getElementById('btn1');
+		btn1.onclick = function(e) {
+			console.log('11');	
+		}
+	</script>
+</body>
+</html>

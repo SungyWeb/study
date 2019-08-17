@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		.inner {
+			width: 100px;
+			height: 100px;
+			background-color: #ccc;
+			
+		}
+		.a {
+			border: 10px solid red;
+			/*outline: 10px solid blue;*/
+			/*outline-offset: -10px;*/
+		}
+		.box {
+			display: flex;
+			justify-content: center;
+		}
+		li {
+			display: list-item;
+			list-style: none;
+			border: 2px solid red;
+		}
+		li+li {
+			margin-top: -2px;
+		}
+		li:hover {
+			border-color: blue;
+			/*outline-offset: -2px;*/
+			/*outline: 2px solid blue;*/
+			/*outline: 10000px solid #00000099;*/
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<div class="inner a"></div>
+		<div class="inner b"></div>
+	</div>
+	<ul>
+		<li>1</li>
+		<li>1</li>
+		<li>1</li>
+		<li>1</li>
+		<li>1</li>
+	</ul>
+</body>
+</html>
