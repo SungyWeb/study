@@ -1,17 +1,7 @@
-@test()
-class MyTest {
-	name: string;
-	isTest: boolean;
-	constructor() {
-		this.name = 'tttt';
-	}
+function loggingIdentity<T>(arg: T[]): T[] {
+    console.log(arg.length);  // Array has a .length, so no more error
+    return arg;
 }
-
-function test() {
-	return function(tar: Function) {
-		tar.prototype.isTest = true;
-	}
-}
-
-var a = new MyTest();
-console.log(a.isTest);
+loggingIdentity([1,2,3]);   // ok
+loggingIdentity(['a', 'b', 'c']);   // ok
+loggingIdentity([{}, 'b', 'c']);   // ok
