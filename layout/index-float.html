@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		*{padding: 0; margin: 0}
+		body {
+			background-color: #eee;
+		}
+		.box {
+			height: 300px;
+			margin: 10px;
+			background-color: #fff;
+		}
+		.main {
+			width: 80%;
+			margin: auto;
+			margin-top: 65px;
+			
+		}
+		.item {
+			width: 64px;
+			height: 64px;
+			font-size: 12px;
+			position: relative;
+		}
+		.txt-box {
+			position: absolute;
+			top: 70px;
+			left: -43px;
+			width: 150px;
+			text-align: center;
+		}
+		.item>p {
+			white-space: nowrap;
+		}
+		.line {
+			flex: 1;
+			padding: 0 15px;
+			background-color: #f00;
+			height: 10px;
+			border-radius: 5px;
+			position: relative;
+		}
+		.line::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 10px;
+			height: 10px;
+			background-color: red;
+			border-radius: 50%;
+		}
+		.line::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 10px;
+			height: 10px;
+			background-color: red;
+			border-radius: 50%;
+		}
+	</style>
+</head>
+<body>
+	<!-- 关键点在于将文字部分脱离文档流 -->
+	<div class="box">
+		<h5>全生命周期管理</h5>
+		<table class="main">
+			<tr>
+				<td class="item">
+					<div class="img-box"><img src="imgs/aa.png"></div>
+					<div class="txt-box">
+						<p><b>生产</b></p>
+						<p><span>2019-08-19 08:40:59</span></p>
+					</div>
+				</td>
+				<td><p class="line"></p></td>
+				<td class="item">
+					<div class="img-box"><img src="imgs/bb.png"></div>
+					<div class="txt-box">
+						<p><b>整车物流</b></p>
+						<p><b>起 </b><span>2019-08-19 08:40:59</span></p>
+						<p><b>到 </b><span>2019-08-19 08:40:59</span></p>
+					</div>
+				</td>
+				<td><p class="line"></p></td>
+				<td class="item">
+					<div class="img-box"><img src="imgs/cc.png"></div>
+					<div class="txt-box">
+						<p><b>经销商库存</b></p>
+						<p><span>2019-08-19 08:40:59</span></p>
+					</div>
+				</td>
+				<td><p class="line"></p></td>
+				<td class="item">
+					<div class="img-box"><img src="imgs/dd.png"></div>
+					<div class="txt-box">
+						<p><b>实销</b></p>
+						<p><span>2019-08-19 08:40:59</span></p>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
