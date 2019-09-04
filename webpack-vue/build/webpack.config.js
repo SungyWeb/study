@@ -129,10 +129,10 @@ module.exports = {
 		new webpack.NamedModulesPlugin(),	// 开启HMR(热模块替换，即下面的插件)时，显示模块的相对路径
 		new webpack.HotModuleReplacementPlugin(),	// HMR 热模块替换
 		new VueLoaderPlugin(),
-	],
-	devServer: {
-		hot: true,
-		port: 3000,
-		contentBase: path.resolve(__dirname, '../dist')
-	}
+		new webpack.DefinePlugin({
+			'processs.env': {
+				VUE_APP_BASE_URL: JSON.stringify('http://localhost:3000')
+			}
+		})
+	]
 }

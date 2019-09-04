@@ -1,6 +1,6 @@
 <template>
 	<div class="app">
-		<h3 :class="className">{{msg}}</h3>
+		<h3 :class="this.className" @click="changeClass">{{msg}}</h3>
 	</div>
 </template>
 
@@ -12,7 +12,12 @@
 				className: 'red',
 				msg: '哈哈哈哈'
 			}
-		}
+		},
+		methods: {
+			changeClass() {
+				this.className = this.className === 'red' ? 'blue' : 'red';
+			}
+ 		}
 	}
 </script>
 
