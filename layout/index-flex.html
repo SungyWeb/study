@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		*{padding: 0; margin: 0}
+		body {
+			background-color: #eee;
+		}
+		.box {
+			height: 300px;
+			margin: 10px;
+			background-color: #fff;
+		}
+		.main {
+			width: 80%;
+			margin: auto;
+			margin-top: 65px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.item {
+			width: 64px;
+			height: 64px;
+			margin: 0 5px;
+			white-space: nowrap;
+			text-align: center;
+			font-size: 12px;
+		}
+		.item > p {
+			margin-top: 5px;
+			width: 150px;
+			margin-left: -43px;
+			text-align: center;
+		}
+		.line {
+			flex: 1;
+			padding: 0 15px;
+			background-color: #f00;
+			height: 10px;
+			border-radius: 5px;
+			position: relative;
+		}
+		.line::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 10px;
+			height: 10px;
+			background-color: red;
+			border-radius: 50%;
+		}
+		.line::after {
+			content: "";
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 10px;
+			height: 10px;
+			background-color: red;
+			border-radius: 50%;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+		<h5>全生命周期管理</h5>
+		<div class="main">
+			<div class="item">
+				<div><img src="imgs/aa.png"></div>
+				<p><b>生产</b></p>
+				<p><span>2019-08-19 08:40:59</span></p>
+			</div>
+			<p class="line"></p>
+			<div class="item">
+				<div><img src="imgs/bb.png"></div>
+				<p><b>整车物流</b></p>
+				<p><b>起 </b><span>2019-08-19 08:40:59</span></p>
+				<p><b>到 </b><span>2019-08-19 08:40:59</span></p>
+			</div>
+			<p class="line"></p>
+			<div class="item">
+				<div><img src="imgs/cc.png"></div>
+				<p><b>经销商库存</b></p>
+				<p><span>2019-08-19 08:40:59</span></p>
+			</div>
+			<p class="line"></p>
+			<div class="item">
+				<div><img src="imgs/dd.png"></div>
+				<p><b>实销</b></p>
+				<p><span>2019-08-19 08:40:59</span></p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
