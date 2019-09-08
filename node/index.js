@@ -6,6 +6,7 @@ let fortunes = require('./lib/fortunes');
 1. nodemon 代码热更新，不用每次都重启服务
 2. express-handlebars 模板引擎
 3. mocha 前端测试
+4. xxxx
 */
 
 const app = express();
