@@ -134,6 +134,8 @@
 
     let myObj = {size: 10, label: "Size 10 Object"};
     printLabel(myObj);
+
+    printLabel({size: 10, label: "Size 10 Object"}); // 报错，提示size属性在接口不存在
     ```
 
 2. 可选属性
@@ -516,6 +518,8 @@
     if (employee.fullName) {
         alert(employee.fullName);
     }
+
+    // 需要指定编译到版本ES5或以上 tsc **.ts -t es5
     ```
 
 6. static 静态属性
@@ -580,6 +584,8 @@
     let fn1 = function(firstName: string, lastName = 'Jone'): string {
         return firstName + lastName;
     }
+
+    // 剩余参数和可选参数后面都不能再有参数。剩余参数可放在可选参数后
     ```
 
 3. 剩余参数
@@ -689,6 +695,8 @@
         ```
 
 ## 泛型
+
+泛型可以让不同类型的数据，复用同样的方法或类
 
 1. 示例
 
@@ -828,6 +836,22 @@
     getProperty(x, "m"); // error: Argument of type 'm' isn't assignable to 'a' | 'b' | 'c' | 'd'.
     ```
 
+6. 多个类型变量
+
+```typescript
+class Pair<TKey, TValue> {
+    private _key: TKey;
+    private _value: TValue;
+    constructor(key: TKey, value: TValue) {
+        this._key = key;
+        this._value = value;
+    }
+
+    get key() { return this._key; }
+    get value() { return this._value; }
+}   
+```
+
 ## 枚举
 
 ### 枚举
@@ -875,3 +899,295 @@ enum Direction {
 ### 装饰器
 
 装饰器是一种特殊类型的声明，它能够被附加到类声明，方法， 访问符，属性或参数上。 装饰器使用 @expression这种形式，expression求值后必须为一个函数，它会在运行时被调用，被装饰的声明信息做为参数传入。
+
+## 高级类型
+
+### 交叉类型(&)
+
+```typescript
+interface A {a:number};
+interface B {b:string};
+
+const a:A = {a:1};
+const b:B = {b:'1'};
+const ab:A&B = {...a,...b};
+```
+### 联合类型(|)
+
+```typescript
+let stringAndNumber: string | number;
+stringAndNumber = 'ts';
+stringAndNumber = 7;
+```
+
+### 类型别名
+
+别名 type， 就是给一个类型起个新名字便于记忆和使用
+
+1. 用在有联合类型的场景下
+
+```typescript
+type Name = string;
+type ShowName = () => string; 
+type NameOrShowName = Name | ShowName; // 联合类型
+
+const getName = (name: NameOrShowName) => {
+    if(typeof name === 'string'){
+        return name;
+    } else {
+        return name();
+    }
+}
+
+let showName = () => 'pr is a boy';
+
+console.log(getName('pr')); // pr
+console.log(getName(showName())); // pr is a boy
+```
+
+2. 字符串字面量类型, 用来约束只能从定义的字段中取值
+
+```typescript
+type EventNames = 'click' | 'scroll' | 'mousemove';
+const handleEvent: (a: Element, b: EventNames) => string = (ele: Element, event: EventNames) => {
+    return `${ele} ${event}`;
+}
+
+handleEvent(document.getElementById('header'), 'scroll');
+handleEvent(document.getElementById('footer'), 'keyup');
+```
+
+3. type 与 interface的区别
+
+相同点
+
++ 都可以描述一个对象或者函数
+
+```typescript
+interface
+
+interface User {
+  name: string
+  age: number
+}
+
+interface SetUser {
+  (name: string, age: number): void;
+}
+
+type
+
+type User = {
+  name: string
+  age: number
+};
+
+type SetUser = (name: string, age: number)=> void;
+```
+
++ 都允许拓展（extends）
+
+interface 和 type 都可以拓展，并且两者并不是相互独立的，也就是说 interface 可以 extends type, type 也可以 extends interface 。 虽然效果差不多，但是两者语法不同。
+
+
+```typescript
+interface extends interface
+interface Name { 
+  name: string; 
+}
+
+interface User extends Name { 
+  age: number; 
+}
+
+type extends type
+type Name = { 
+  name: string; 
+}
+type User = Name & { age: number  };
+
+interface extends type
+type Name = { 
+  name: string; 
+}
+interface User extends Name { 
+  age: number; 
+}
+
+type extends interface
+interface Name { 
+  name: string; 
+}
+type User = Name & { 
+  age: number; 
+}
+```
+
+不同点
+
+接口创建了一个新的名字，可以在其它任何地方使用。 类型别名并不创建新名字
+
+type 可以而 interface 不行
+
++ type 可以声明基本类型别名，联合类型，元组等类型
+
+```typescript
+// 基本类型别名
+type Name = string
+
+// 联合类型
+interface Dog {
+    wong();
+}
+interface Cat {
+    miao();
+}
+
+type Pet = Dog | Cat
+
+// 具体定义数组每个位置的类型
+type PetList = [Dog, Pet]
+```
+
++ type 语句中还可以使用 typeof 获取实例的 类型进行赋值
+
+```typescript
+// 当你想获取一个变量的类型时，使用 typeof
+let div = document.createElement('div');
+type B = typeof div
+```
+
++ 其他骚操作
+
+```typescript
+type StringOrNumber = string | number;  
+type Text = string | { text: string };  
+type NameLookup = Dictionary<string, Person>;  
+type Callback<T> = (data: T) => void;  
+type Pair<T> = [T, T];  
+type Coordinates = Pair<number>;  
+type Tree<T> = T | { left: Tree<T>, right: Tree<T> };
+```
+
+interface 可以而 type 不行
+
++ interface 能够声明合并
+
+```typescript
+interface User {
+  name: string
+  age: number
+}
+
+interface User {
+  sex: string
+}
+
+/*
+User 接口为 {
+  name: string
+  age: number
+  sex: string 
+}
+*/
+```
+
++ type 是不允许 extends 和 implement 的，但是 type 缺可以通过交叉类型 实现 interface 的 extend 行为
+
+type 与 type 交叉
+
+```typescript
+type Name = { 
+  name: string; 
+}
+type User = Name & { age: number  };
+```
+type 与 interface 交叉
+
+```typescript
+interface Name { 
+  name: string; 
+}
+type User = Name & { 
+  age: number; 
+}
+```
+
+## 命名空间 namespace
+
+对类型进行分组管理
+
+```typescript
+namespace Food {
+    export type A = Window;
+    export interface Fruits{
+        taste: string;
+        hardness: number;
+    }
+
+    export interface Meat{
+        taste: string;
+        heat: number;
+    }
+}
+
+let meat: Food.Meat;
+let fruits: Food.Fruits;
+```
+
+如何引入写好的命名空间?
+
+1. 通过 "/// <reference path='xxx.ts'/>" 导入
+通过reference进行导入相当于xxx.ts文件内的命名空间和当前文件进行了合并
+
+2. 通过import导入
+
+```typescript
+// xxx.ts
+// 使用export导出
+export interface Fruits{
+    taste: string;
+    hardness: number;
+}
+
+export interface Meat{
+    taste: string;
+    heat: number;
+}
+
+// yyy.ts
+import {Food} from './xxx'; // 使用import导入
+let meat: Food.Meat;
+let fruits: Food.Fruits;
+```
+
+## 声明文件
+
+存放声明语句的文件，叫声明文件。通常格式为 xxx.d.ts
+
+```jQuery.d.ts
+declare const jQuery2: (selector: string) => any;
+```
+
+```typescript
+jQuery2('#root');
+```
+
+declare var、declare const、declare let
+declare function declareFunc(selector: string): any;
+declare class DeclareClass {
+    name: string;
+    constructor(name: string);
+    showName(): string;
+    showName2() {
+        return `我是${this.name}`;
+    }
+}
+
+
+第三方声明文件
+https://microsoft.github.io/TypeSearch/
+
+
+
+
