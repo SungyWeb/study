@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>three.js</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		* {
+			padding: 0;
+			margin: 0;
+		}
+		html, body {
+			height: 100%;
+		}
+		canvas {
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<script src="https://cdn.bootcss.com/three.js/r83/three.js"></script>
+	<script type="text/javascript">
+		const body = document.body;
+		// 场景
+		let scene = new THREE.Scene();
+		// 相机
+		let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+		// 渲染器
+		let renderer = new THREE.WebGLRenderer();
+		renderer.setSize(body.clientWidth, body.clientHeight);
+		// CubeGeometry 几何体
+		let geometry = new THREE.CubeGeometry(100,100,100);
+		let material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+		let cube = new THREE.Mesh(geometry, material);
+		scene.add(cube);
+
+		renderer.render(scene, camera);
+		body.appendChild(renderer.domElement);
+	</script>
+</body>
+</html>
