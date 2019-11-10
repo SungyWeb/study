@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import './login.less';
 import logo from './imgs/logo.png';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
 import { reqLogin } from '../../api';
+import memoryUtils from '../../utils/memoryUtils';
+import storageUtils from '../../utils/storageUtils';
 
 class Login extends Component {
 
@@ -12,12 +15,15 @@ class Login extends Component {
       if (!err) {
         // console.log('Received values of form: ', values);
         const { username, password} = values;
-        const response = await regLogin(username, passwork);
-        const result = response.data;
+        const result = await reqLogin(username, password);
         if (result.status === 0) {
-
+          message.success('登录成功');
+          const user = result.data;
+          memoryUtils.user = user;  // 保存到内存中
+          storageUtils.save(user);  // 保存到localstorage
+          this.props.history.replace('/');
         }else {
-          
+          message.error(result.msg)
         }
       }
     });
@@ -25,7 +31,8 @@ class Login extends Component {
   validatePwd = (rule, value, callback) => {
     if(!!value) {
       const len = value.length;
-      const reg = /^(?=.*[0-9])(?=.*[a-zA-Z])(.{6,20})$/;
+      // const reg = /^(?=.*[0-9])(?=.*[a-zA-Z])({6,20})$/;
+      const reg = /^[\w]{6,20}$/;
       if(len < 6) {
         callback('密码长度不能小于6位');
       } else if (len > 20) {
@@ -43,7 +50,10 @@ class Login extends Component {
   }
   render() {
     const { getFieldDecorator } = this.props.form;
-
+    const user = memoryUtils.user;
+    if(user && user.id) {
+      return <Redirect to="/"></Redirect>
+    }
     return (
       <div className='login'>
         <header className='login-header'>

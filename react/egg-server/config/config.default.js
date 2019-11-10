@@ -21,6 +21,13 @@ module.exports = appInfo => {
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
+    security: {
+      csrf: {
+        enable: false,
+        ignoreJSON: true
+      },
+      domaniWhiteList: '*'
+    }
   };
 
   return {

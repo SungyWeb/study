@@ -23,7 +23,7 @@ export default function ajax (url, data = {}, method = 'GET') {
     } else {
       promise = axios.post(url, data);
     }
-    promise.then(response => resolve(response)).catch(err => {
+    promise.then(response => resolve(response.data)).catch(err => {
       // reject(err);   注意不能调用reject
       message.error('请求出错了，地址' + url + ', 错误信息：' + err.message);
     })
