@@ -1,6 +1,6 @@
 # typescript笔记
 
-根据官方文档而来，版本3.1
+根据[官方文档](https://www.tslang.cn/docs/home.html)而来，版本3.1
 
 ## 基础类型
 
