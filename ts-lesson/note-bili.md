@@ -253,7 +253,7 @@
     ```
 2. 可选属性、额外属性（[propName:string]: any]）
 3. 函数类型
-    ```
+    ```typescript
     interface Search {
         (str: string, keyword: string): boolean;
     }
@@ -263,4 +263,250 @@
         return res > -1;
     }
     ```
-4. 可索引接口
+4. 可索引接口：对数组、对象的约束（不常用）
+    ```typescript
+    interface MyArr {
+        [index: number]: string
+    }
+    var arr: MyArr = ['a', 'b'];
+
+    interface MyObj {
+        [index: string]: number
+    }
+    var o: MyObj = {age: 12}
+    ```
+5. 类类型接口： 对类的约束 类似抽象类
+    ```typescript
+    interface Animal {
+        name: string;
+        eat(str:string): void;
+    }
+    class Dog implements Animal {
+        name: string;
+        constructor(name: string) {
+            this.name = name;
+        }
+        eat(str: string) {
+            console.log('狗吃' + str);
+        }
+    }
+    ```
+6. 接口扩展：接口继承
+    ```typescript
+    interface Animal {
+        eat(): void;
+    }
+    interface Person extends Animal {
+        work(): void;
+    }
+
+    class Web implements Person {
+        eat() {
+            console.log(1)
+        }
+        work() {}
+    }
+    const p = new Web();
+    ```
+
+# 泛型
+
+泛型就是解决类、接口对不定数据类型的支持，它要求传入的数据类型与指定的数据类型（一般用T表示，也可以用其他的）一致。
+
+1. 泛型函数
+    ```typescript
+    function getData<T>(val: T): T {
+        return T;
+    }
+    getData<number>(123);
+    // 返回的类型可以为其他，但一般都是与传入的一致
+    ```
+2. 泛型类
+    ```typescript
+    class Demo<T> {
+        public list: T[] = [];
+        add(val:T): void {
+            this.list.push(val);
+        }
+    }
+    let m = new Demo<number>();
+    m.add(1);
+    m.add('a');
+    ```
+3. 泛型接口
+    ```typescript
+    interface ConfigFn {
+        <T>(value:T):T;
+    }
+    interface ConfigFn<T> {
+        (value:T): T;
+    }
+    function aa <T>(val:T) {
+        return val;
+    }
+    let aa = function <T>(val:T) {
+        return val;
+    }
+    ```
+4. 实例demo
+
+    将user和punch写入到数据库
+
+    ```typescript
+    class User {
+        username: string = '';
+        password: string = '';
+    }
+    class Punch {
+        zao:string = '到';
+        wan: string = '到';
+    }
+    class Mysql<T> {
+        add(data: T): boolean {
+            console.log(data);
+            return true;
+        }
+    }
+    let u = new User();
+    u.username = '张三';
+    u.password = 'abc123';
+    let db1 = new Mysql<User>();
+    db1.add(u);
+
+    let db2 = new Mysql<Punch>();
+    let p = new Punch();
+    db2.add(p);
+    ```
+
+# 模块
+
+内部模块也称为‘命名空间’，外部模块称为‘模块’，模块在自身的作用域里，必须通过export、import导出引入才能使用。
+```typescript
+// a.js
+export namespace A {
+    export getData() {
+        console.log(1)
+    }
+    export Class Animal {
+        say(){
+            console.log(2)
+        }
+    }
+}
+// b.js
+import {A} from './a.js'
+A.getData();
+const dog = new A.Animal();
+```
+
+# 装饰器
+
+装饰器是一种特殊类型的声明，它能够附加到类、方法、属性、参数上，可以修改行为。
+
+1. 类装饰器：在不修改类的情况下扩展类的功能
+    ```typescript
+    function aa (param: any) {
+        // console.log(param);
+        param.prototype.eat = function() {
+            console.log('eat');
+        }
+    }
+
+    // 紧挨着类，没有参数传递 普通装饰器
+    @aa
+    class AA {
+        say() {
+            console.log('hello');
+        }
+    }
+    const a: any = new AA();
+    a.eat();
+    ```
+
+    ```typescript
+    function aa (param: string) {
+        return function(target:any) {
+            target.prototype.eat = function() {
+                console.log(param);
+                console.log('eat');
+            }
+        }
+        
+    }
+
+    // 装饰器工厂 可传参
+    @aa('hello')
+    class AA {
+        say() {
+            console.log('hello');
+        }
+    }
+    const a: any = new AA();
+    a.eat();
+    ```
+
+    ```typescript
+    // 重载构造函数里的属性方法
+    function aa (target: any) {
+        return class extends target {
+            name = '小刚';
+            say() {
+                console.log(this.name)
+            }
+        }
+    }
+
+    @aa
+    class AA {
+        name: string = '小明';
+        say() {
+            console.log('hello');
+        }
+    }
+    const a: any = new AA();
+    a.say();
+    ```
+2. 属性装饰器
+    ```typescript
+    function LogAttr(param: string) {
+        return function(target:any, attr: any) {
+            target[attr] = param;
+        }
+    }
+    class AA {
+        @LogAttr('小红')
+        public name: string | undefined;
+        // public name: string = 'aa';
+        constructor() {}
+        say() {
+            console.log(this.name);
+        }
+    }
+    var a = new AA();
+    a.say();
+    ```
+3. 方法装饰器
+    ```typescript
+    function get(param: any) {
+        return function(target:any, methodName: any, desc: any) {
+            desc.value = function(...args: any[]) {
+                let oMethod = desc.value;
+                desc.value = function(...args: any[]) {
+                    args = args.map(v => String(v));
+                    oMethod.apply(this, args)
+                }
+            }
+        }
+    }
+    function _say() {
+        console.log(456)
+    }
+    class AA {
+        @get(_say)
+        say(...args:any[]) {
+            console.log(args)
+        }
+    }
+    let a = new AA();
+    a.say(123, '345', [5,6,7]);
+    ```
