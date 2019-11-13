@@ -489,20 +489,17 @@ const dog = new A.Animal();
     ```typescript
     function get(param: any) {
         return function(target:any, methodName: any, desc: any) {
+            let oMethod = desc.value;
             desc.value = function(...args: any[]) {
-                let oMethod = desc.value;
-                desc.value = function(...args: any[]) {
-                    args = args.map(v => String(v));
-                    oMethod.apply(this, args)
-                }
+                args = args.map(v => String(v));
+                args = [param, ...args]
+                oMethod.apply(this, args)
             }
         }
     }
-    function _say() {
-        console.log(456)
-    }
+    
     class AA {
-        @get(_say)
+        @get('toString')
         say(...args:any[]) {
             console.log(args)
         }
