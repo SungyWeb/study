@@ -308,11 +308,195 @@
 		- apply(target, object, args)：拦截 Proxy 实例作为函数调用的操作，比如proxy(...args)、proxy.call(object, ...args)、proxy.apply(...)。
 		- construct(target, args)：拦截 Proxy 实例作为构造函数调用的操作，比如new proxy(...args)
 
+12. Reflect 
+	+ 概述
+
+		Reflect 对象于proxy对象一样，为了增加对象操作而提供的新API，它的设计目的有以下几点:
+
+		(1) 将Object对象的一些明显属于语言内部的方法（如Object.definedProperty)，放到Reflect对象上。
+
+		(2) 修改某些Object方法返回的结果，如`Object.definedProperty(obj, name, desc)`在无法定义属性时，会抛出一个错误，而`Reflect.definedProperty(obj, name, desc)`则会返回false
+
+		(3) 让Object操作都变成函数行为。某些object操作是命令式的，如`name in obj`和`delete obj[name]`，而`Reflect.has(obj, name)`和`Reflect.deleteProperty(obj, name)`让他们变成了函数行为。
+
+		(4) Reflect对象的方法与Proxy对象的方法一一对应，只要是Proxy对象的方法，就能在Reflect对象上找到对应的方法。这就让Proxy对象可以方便地调用对应的Reflect方法，完成默认行为，作为修改行为的基础。也就是说，不管Proxy怎么修改默认行为，你总可以在Reflect上获取默认行为。
+
+	+ 静态方法, 与proxy一致
+		Reflect.apply(target, thisArg, args)
+		Reflect.construct(target, args)
+		Reflect.get(target, name, receiver)
+		Reflect.set(target, name, value, receiver)
+		Reflect.defineProperty(target, name, desc)
+		Reflect.deleteProperty(target, name)
+		Reflect.has(target, name)
+		Reflect.ownKeys(target)
+		Reflect.isExtensible(target)
+		Reflect.preventExtensions(target)
+		Reflect.getOwnPropertyDescriptor(target, name)
+		Reflect.getPrototypeOf(target)
+		Reflect.setPrototypeOf(target, prototype)
 
 
+13. Promise
+	+ 含义：Promise是一个异步编程的解决方案，它是一个容器，里面保存着未来才会结束的事件。它有三种状态pending/fulfilled/rejected，它的状态变化不受外界影响，只有异步操作的结果可以决定当前是哪一种状态；另外一旦状态改变了，就不会再改变，只能是从pending->fulfilled或者pending->rejected这两种变化，一旦发生了变化，会一直保持这个结果，这时成为resolved(已定型)。
+	+ 缺点： 无法取消promise，**一旦创建就会立即执行（new Promise中会立即执行）**，无法中途取消；如果不设置回调函数，promise内部抛出错误，不会反应到外部；当处于pending状态，无法得知目前是哪一阶段（刚刚开始还是即将完成）
+		```
+		let promise = new Promise(function(resolve, reject) {
+		  console.log('Promise');
+		  resolve();
+		});
+		promise.then(function() {
+		  console.log('resolved.');
+		});
+		console.log('Hi!');
+		// Promise
+		// Hi!
+		// resolved
+		```
+	+ Promise.prototype.then() 接收两个回调函数，第一个是resolved状态的回调函数，第二个是rejected状态的回调函数（可选）。then方法会返回一个**新的**promise，所以可以采用链式写法
+		```
+		getJSON("/posts.json").then(function(json) {
+		  return json.post;
+		}).then(function(post) {
+		  // ...
+		});
+		// 第一个回调函数完成以后，会将返回结果作为参数，传入第二个回调函数。
+		```
+	+ Promise.prototype.catch() 它是`.then(null, rejection)`或`.then(undefined, rejection)`的别名，用于指定放生错误时的回调函数。
+	+ 一般情况不在then中指定rejected的回调，而是使用catch来获取错误
+	+ Promise.prototype.finally() 不管promise对象最终状态如何，都会执行的回调
+	+ Promise.all() 接收一个promise实例的数组，包装成一个新的promise对象，只有数组的每个promise都fulfilled，才会进入fulfilled，只要其中一个rejected，就会进入rejected，并返回第一个rejected的值。
+	+ Promise.race() 接收一个promise实例的数组，包装成一个新的promise对象，只要有一个实例的状态改变，新的promise对象的状态也会随之改变
+	+ Promise.allSettled() 方法接受一组 Promise 实例作为参数，包装成一个新的 Promise 实例。只有等到所有这些参数实例都返回结果，不管是fulfilled还是rejected，包装实例才会结束，，一旦结束，状态总是fulfilled，不会变成rejected。状态变成fulfilled后，Promise 的监听函数接收到的参数是一个数组，每个成员对应一个传入Promise.allSettled()的 Promise 实例。
+		```
+		const promises = [ fetch('index.html'), fetch('https://does-not-exist/') ];
+		const results = await Promise.allSettled(promises);
+		// 过滤出成功的请求
+		const successfulPromises = results.filter(p => p.status === 'fulfilled');
+		// 过滤出失败的请求，并输出原因
+		const errors = results
+		  .filter(p => p.status === 'rejected')
+		  .map(p => p.reason);
+		```
+	+ Promise.any() 方法接受一组 Promise 实例作为参数，包装成一个新的 Promise 实例。只要参数实例有一个变成fulfilled状态，包装实例就会变成fulfilled状态；如果所有参数实例都变成rejected状态，包装实例就会变成rejected状态。该方法目前是一个第三阶段的提案 
+	+ Promise.resolve() 将现有对象转为 Promise 对象
+		```
+		Promise.resolve('foo')
+		// 等价于
+		new Promise(resolve => resolve('foo'))
+		```
+		1. 如果参数是 Promise 实例，那么Promise.resolve将不做任何修改、原封不动地返回这个实例。
+		2. 参数是一个thenable对象(具有then方法的对象)，Promise.resolve方法会将这个对象转为 Promise 对象，然后就立即执行thenable对象的then方法
+		3. 参数是一个原始值，或者是一个不具有then方法的对象，则Promise.resolve方法返回一个新的 Promise 对象，状态为resolved。
+		4. Promise.resolve()方法允许调用时不带参数，直接返回一个resolved状态的 Promise 对象。
+	+ Promise.reject(reason) 方法也会返回一个新的 Promise 实例，该实例的状态为rejected
 
+14. Iterator(遍历器)和for...of 
 
+	可用于Array/Map/Set/String/TypedArray/函数的 arguments 对象/NodeList 对象
 
+15. Generator
+	+ 定义：Generator函数通过yield来定义不同的状态，每次可以通过next方法返回该状态表达式的值。
+		```
+		function* helloWorldGenerator() {
+		  yield 'hello';
+		  yield 'world';
+		  return 'ending';
+		}
+		var hw = helloWorldGenerator();
+		hw.next()
+		// { value: 'hello', done: false }
+		hw.next()
+		// { value: 'world', done: false }
+		hw.next()
+		// { value: 'ending', done: true }
+		hw.next()
+		// { value: undefined, done: true }
+		```
+	+ yield 的返回值总是undefined，next方法可以带一个参数，该参数被作为上一个yield表达式的返回值。
+		```
+		function* foo(x) {
+		  var y = 2 * (yield (x + 1));
+		  var z = yield (y / 3);
+		  return (x + y + z);
+		}
+		var a = foo(5);
+		a.next() // Object{value:6, done:false}
+		a.next() // Object{value:NaN, done:false}
+		a.next() // Object{value:NaN, done:true}
+		var b = foo(5);
+		b.next() // { value:6, done:false }
+		b.next(12) // { value:8, done:false }
+		b.next(13) // { value:42, done:true }
+		```
+16. async
+	+ async/await 是 Generator 函数的语法糖，重要的一点是 async 返回的是一个promise，会将函数return的值作为resolve的值
+		```
+		async function getStockPriceByName(name) {
+		  const symbol = await getStockSymbol(name);
+		  const stockPrice = await getStockPrice(symbol);
+		  return stockPrice;
+		}
+		getStockPriceByName('goog').then(function (result) {
+		  console.log(result);
+		});
+		```
+	+ 注意点
+		1. 前面已经说过，await命令后面的Promise对象，运行结果可能是rejected，所以最好把await命令放在try...catch代码块中
+			```
+			async function myFunction() {
+			  try {
+			    await somethingThatReturnsAPromise();
+			  } catch (err) {
+			    console.log(err);
+			  }
+			}
+			// 另一种写法
+			async function myFunction() {
+			  await somethingThatReturnsAPromise()
+			  .catch(function (err) {
+			    console.log(err);
+			  });
+			}
+			```
+		2. 多个await命令后面的异步操作，如果不存在继发关系，最好让它们同时触发。
+			```
+			// bad
+			let foo = await getFoo();
+			let bar = await getBar();
+			// good 写法一
+			let [foo, bar] = await Promise.all([getFoo(), getBar()]);
+			// good 写法二
+			let fooPromise = getFoo();
+			let barPromise = getBar();
+			let foo = await fooPromise;
+			let bar = await barPromise;
+			```
+		3. await命令只能用在async函数之中，如果用在普通函数，就会报错。
+	+ 实战：请求一组url
+		```
+		// 这样写并不好，因为这是继发，只有前一个 URL 返回结果，才会去读取下一个 URL，这样做效率很差，非常浪费时间
+		async function logInOrder(urls) {
+		  for (const url of urls) {
+		    const response = await fetch(url);
+		    console.log(await response.text());
+		  }
+		}
+		```
 
+		```
+		// TODO 不是很理解
+		// 虽然map方法的参数是async函数，但它是并发执行的，因为只有async函数内部是继发执行，外部不受影响。后面的for..of循环内部使用了await，因此实现了按顺序输出。
+		async function logInOrder(urls) {
+		  // 并发读取远程URL
+		  const textPromises = urls.map(async url => {
+		    const response = await fetch(url);
+		    return response.text();
+		  });
 
-
+		  // 按次序输出
+		  for (const textPromise of textPromises) {
+		    console.log(await textPromise);
+		  }
+		}
+		```
