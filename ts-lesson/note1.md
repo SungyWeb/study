@@ -43,7 +43,7 @@
 7. Any 任意类型
 8. Void 没有类型，一般用于函数没有返回值，该类型得值只能时undefined和null
 9. Null 和 Undefined
-10. Never 永不存在的值的类型
+10. Never 永不存在的值的类型，如死循环/抛出异常而终止了程序运行
 11. Object 表示非原始类型，也就是除number，string，boolean，symbol，null或undefined之外的类型，一般用于规定函数得参数类型
 12. 类型断言，清楚地知道一个实体具有比它现有类型更确切的类型
 
@@ -964,7 +964,7 @@ handleEvent(document.getElementById('footer'), 'keyup');
 + 都可以描述一个对象或者函数
 
 ```typescript
-interface
+// interface
 
 interface User {
   name: string
@@ -975,7 +975,7 @@ interface SetUser {
   (name: string, age: number): void;
 }
 
-type
+// type
 
 type User = {
   name: string
