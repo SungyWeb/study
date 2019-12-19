@@ -181,12 +181,6 @@ Pie.prototype = {
             targetEndAngle = initStart + (opt.value / 100 * 2 * PI);
         }
 
-
-        // this.radians.old = {
-        // 	start: this.radians.cur.start,
-        // 	end: this.radians.cur.end
-        // }
-
         this.radians.cur = {
             start: startangle,
             end: targetEndAngle
@@ -218,8 +212,6 @@ Pie.prototype = {
         }
 
         this._draw();
-
-
     },
     _draw: function() {
         var ctx = this._ctx;
@@ -234,12 +226,12 @@ Pie.prototype = {
         var circle = this.circle, arc = this.arc, dots = this.dots;
         if(opt.bgcolor) {
             ctx.fillStyle = opt.bgcolor;
-            ctx.fillRect(0, 0, container.clientWidth, container.clientHeight);
+            ctx.fillRect(0, 0, _w, _h);
         }
         // 偏移
         ctx.scale(dpr, dpr);
         // ctx.translate(0.5, 0.5);
-        ctx.clearRect(_w/2, _h/2, _w, _h);
+        ctx.clearRect(0, 0, _w, _h);
         ctx.translate(_w/2, _h/2);
         ctx.rotate(-PI/2); 	// 旋转画布
 
