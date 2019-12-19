@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: black;;
+        }
+        .a {
+            float: left;
+            width: 200px;
+            height: 200px;
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script src="./jquery.knob.js"></script>
+</head>
+<body>
+    <div class="a" id="a"></div>
+    <div id="b" class="a">
+        
+    </div>
+    <input type="text" value="75" data-line cap="round" class="dial">
+
+    <script>
+        $(function() {
+            $(".dial").knob();
+        });
+    </script>
+    <script>
+        var b = document.getElementById('b');
+        var w = b.clientWidth;
+        var h = b.clientHeight;
+        var canvas = document.createElement('canvas');
+        var c = canvas.getContext('2d');
+        var pi2 = Math.PI * 2;
+        var dpr = (window.devicePixelRatio || 1) / (
+            c.webkitBackingStorePixelRatio ||
+            c.mozBackingStorePixelRatio ||
+            c.msBackingStorePixelRatio ||
+            c.oBackingStorePixelRatio ||
+            c.backingStorePixelRatio || 1
+        );
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        var radius = [0.5, 0.8];
+        var base = Math.min(w, h);  // 取宽或高，哪个小取那个
+        var dis = base*(radius[1] - radius[0]) / 2;
+        var r = base*((radius[1] - radius[0]) / 2 + radius[0])/2;
+        c.scale(dpr, dpr);
+        var step = 0.1;
+        var angle = 0;
+        
+        b.appendChild(canvas);
+        var timer = setInterval(function() {
+            angle += step;
+            if(angle >= Math.PI) {
+                clearInterval(timer);
+                angle = Math.PI;
+            }
+            c.clearRect(0, 0, w*dpr, h*dpr);
+            c.beginPath();
+            c.arc(100, 100, r, 0, pi2, false);
+            c.strokeStyle = '#eee';
+            c.lineWidth = dis;
+            c.stroke();
+
+            c.beginPath();
+            c.arc(100, 100, r, 0, angle, false);
+            c.strokeStyle = '#70d0ee';
+            c.lineCap = 'round';
+            c.stroke();
+        },20)
+    </script>
+    <script src="pie.js"></script>
+    <script>
+        var a = document.querySelector('.a');
+        var chart = Pie.init(a);
+        chart.render({
+            value: 35, 
+            // radius: ['0.5', '0.8'], 
+            // lineCap: 'butt',
+            // startAngle: 180,
+            // dotColor: ['#f0f', '#fac'],
+            // arcColor: ['#50CDCC', '#557DFF']
+        });
+    </script>
+</body>
+</html>
