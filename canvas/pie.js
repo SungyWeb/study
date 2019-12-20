@@ -102,6 +102,7 @@
             }
         },
         render: function(config) {
+            config = config || {};
             var opts =  {
                 bgcolor: '',	// canvas 的背景色
                 radius: [0.7, 0.8],		// 圆环的宽度，用canvas的宽度乘以这两个数
@@ -358,6 +359,21 @@
             this.dots.end.y = enddotxy.y;
             this._count = 0;
             this._draw();
+        },
+        resize: function() {
+            console.count('resize')
+            var dom = this._dom;
+            var cvs = this._cvs;
+            var w = dom.clientWidth;
+            var h = dom.clientHeight;
+            this._ctx.clearRect(0, 0, this._w, this._h);
+            this._w = w;
+            this._h = h;
+            cvs.style.width = w + 'px';
+            cvs.style.height = h + 'px';
+            cvs.width = w * this.dpr;
+            cvs.height = h * this.dpr;
+            this._init();
         }
     }
     Pie.init = function(dom) {

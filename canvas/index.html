@@ -11,7 +11,7 @@
         }
         .a {
             float: left;
-            width: 400px;
+            width: 30%;
             height: 200px;
         }
     </style>
@@ -89,6 +89,9 @@
             // dotColor: ['#f0f', '#fac'],
             // arcColor: ['#50CDCC', '#557DFF']
         });
+        window.onresize = function () {
+            chart.resize();
+        }
     </script>
 </body>
 </html>
