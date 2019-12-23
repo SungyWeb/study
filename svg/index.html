@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: #333;
+        }
+        #a {
+            width: 200px;
+            height: 200px;
+            border: 1px solid red;
+            margin: auto;
+        }
+        .svg {
+            width: 100%;
+            height: 100%;
+
+        }
+        #arc {
+            /* animation: run .5s linear; */
+            transition: stroke-dasharray .5s;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="a">
+        <svg class="svg">
+            <circle cx="100" cy="100" r="70" stroke="#ddd" stroke-width="10" fill="none"></circle>
+            <path id="arc" transform="translate(100, 100)" d="M 70,0 A70,70,0,0,1,0,70" stroke-width="10" stroke="yellow" fill="none"
+                stroke-dashoffset="0" stroke-dasharray="100% 100%" stroke-linecap="round">
+            </path>
+        </svg>
+    </div>
+    <script src="pie.js"></script>
+    <script>
+        var a = new Pie(document.getElementById('a'), { value: 25, startAngle: 30 })
+    </script>
+</body>
+</html>
