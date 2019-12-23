@@ -19,25 +19,57 @@
     // 创建场景
     var scene = new THREE.Scene();
     // 网格模型
-    var box = new THREE.BoxGeometry(100, 100, 100);   // 几何体
-    var material = new THREE.MeshLambertMaterial({color: 0x11aaff});  // 材质
+      // 立方体
+    var box = new THREE.BoxGeometry(50, 50, 50);   // 几何体
+    var material = new THREE.MeshLambertMaterial({
+      color: 0x11aaff,
+      opacity: 0.7,
+      transparent: true,
+    });  // 材质
     var mesh = new THREE.Mesh(box, material);   // 网格模型
     scene.add(mesh);  // 将网格模型添加到场景中
-    var sphere = new THREE.SphereGeometry(50,40,40); // 创建一个球体
+      // 球
+    var sphere = new THREE.SphereGeometry(25,40,40); // 创建一个球体
     var sphereMaterial = new THREE.MeshLambertMaterial({
       color: 0x0000ff,
       opacity: 0.7,
       transparent: true,
-    });  // 材质
-    var sphereMaterial = new THREE.MeshPhongMaterial({
+    });  // 材质 透视
+    var phongMaterial = new THREE.MeshPhongMaterial({
       color: 0x0000ff,
       specular: 0x4488ee,
       shininess: 12,
-    });
-    var mesh2 = new THREE.Mesh(sphere,sphereMaterial);
+    });  // 材质 高亮
+    // var mesh2 = new THREE.Mesh(sphere,sphereMaterial);  // 透视
+    var mesh2 = new THREE.Mesh(sphere,phongMaterial);   // 高亮
     mesh2.translateY(50);   // 移动
-    
     scene.add(mesh2);
+    // 创建线条对象
+    var lineGeometry = new THREE.Geometry();    // 空几何体
+    var p1 = new THREE.Vector3(0, 0, 0);   // 顶点1坐标
+    var p2 = new THREE.Vector3(300, 0, 0);   // 顶点2坐标
+    var p3 = new THREE.Vector3(0, 0, 0);   // 顶点3坐标
+    var p4 = new THREE.Vector3(0, 300, 0);   // 顶点4坐标
+    var p5 = new THREE.Vector3(0, 0, 0);   // 顶点4坐标
+    var p6 = new THREE.Vector3(0, 0, 300);   // 顶点4坐标
+    lineGeometry.vertices.push(p1, p2, p3, p4, p5, p6);    // 将顶点添加到几何体
+    var lineMaterial = new THREE.LineBasicMaterial({
+        color: 0xff0000
+    });     // 材质对象
+    var line = new THREE.Line(lineGeometry, lineMaterial);      // 线条模型对象
+    scene.add(line);    // 将线条模型添加到场景中
+    // 创建点对象
+    var pointGeometry = new THREE.Geometry();
+    var p7 = new THREE.Vector3(100, 0, 0);   // 顶点1坐标
+    var p8 = new THREE.Vector3(0, 120, 0);   // 顶点2坐标
+    var p9 = new THREE.Vector3(115, 115, 0);   // 顶点3坐标
+    pointGeometry.vertices.push(p7, p8, p9);    // 将顶点添加到几何体
+    var pointMaterial = new THREE.PointsMaterial({
+      color: 0xff0000,
+      size: 10
+    });
+    var points = new THREE.Points(pointGeometry, pointMaterial);
+    scene.add(points);
     // 光源设置
     var point = new THREE.PointLight(0xffffff);   // 点光源
     point.position.set(400, 200, 300);    // 光源位置
@@ -69,26 +101,26 @@
     所以一般不用考虑渲染函数中几个计时语句占用的时间，除非你编写的是要精确到纳秒ns的级别的标准时钟程序。
     */
     // 动画
-    // var t0 = new Date();
-    // function renderFn() {
-    //   var t1 = new Date();
-    //   var t = t1 - t0;
-    //   t0 = t1;
-    //   // 执行渲染
-    //   render.render(scene, camera);
-    //   mesh.rotateY(0.001 * t);
-    //   requestAnimationFrame(renderFn);
-    // }
-    // renderFn();
+    var t0 = new Date();
+    function renderFn() {
+      var t1 = new Date();
+      var t = t1 - t0;
+      t0 = t1;
+      // 执行渲染
+      render.render(scene, camera);
+      mesh.rotateY(0.001 * t);
+      requestAnimationFrame(renderFn);
+    }
+    renderFn();
 
     // 鼠标动作 需要OribtControls.js
     // todo：暂时没有鼠标---待确认
-    function renderFn() {
-      render.render(scene, camera);
-    }
-    renderFn();
-    var control = new THREE.OrbitControls(camera);    // 创建控件对象
-    control.addEventListener('change', renderFn);
+    // function renderFn() {
+    //   render.render(scene, camera);
+    // }
+    // renderFn();
+    // var control = new THREE.OrbitControls(camera);    // 创建控件对象
+    // control.addEventListener('change', renderFn);
   </script>
 </body>
 </html>
