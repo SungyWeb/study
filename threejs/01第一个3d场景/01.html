@@ -70,6 +70,21 @@
     });
     var points = new THREE.Points(pointGeometry, pointMaterial);
     scene.add(points);
+    // 三角面网格模型对象
+    var gridGeometry = new THREE.Geometry();
+    var p10 = new THREE.Vector3(0, 0, 0);   // 顶点1坐标
+    var p11 = new THREE.Vector3(80, 0, 0);   // 顶点2坐标
+    var p12 = new THREE.Vector3(0, 80, 0);   // 顶点3坐标
+    gridGeometry.vertices.push(p10, p11, p12);
+    var normal = new THREE.Vector3(0, 0, 1);
+    var face = new THREE.Face3(0, 1, 2, normal);
+    gridGeometry.faces.push(face);
+    var gridMaterial = new THREE.MeshLambertMaterial({
+      color: 0x0000ff,
+      side: THREE.DoubleSide
+    });
+    var gridMesh = new THREE.Mesh(gridGeometry, gridMaterial);
+    scene.add(gridMesh)
     // 光源设置
     var point = new THREE.PointLight(0xffffff);   // 点光源
     point.position.set(400, 200, 300);    // 光源位置
