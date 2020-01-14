@@ -74,7 +74,7 @@
 |**丰富的语言操作**|
 |输入建议（智能提示）| ⌃Space | Ctrl+Space |
 |参数提示| ⇧⌘Space | Ctrl+Shift+Space |
-|格式化| ⇧⌘Space | Shift+Alt+F |
+|格式化| ⇧⌥F  | Shift+Alt+F |
 |格式化选中部分的代码| ⌘K ⌘F | Ctrl+K Ctrl+F |
 |跳到定义处| F12  | F12 |
 |代码片段显示定义| ⌥F12 | Alt+F12 |
