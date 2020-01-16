@@ -2,7 +2,7 @@
 
 ## 初始化数据库
 + `mysqld --initialize --console` 生成默认root用户和初始密码
-+ `mysql install`
++ `mysqld install`
 + `net start mysql` 启动mysql服务
 + `net stop mysql` 关闭mysql服务
 + `mysql -h 主机名 -u 用户名 -p` -h可以登录远程服务器的数据库，登录本机可以省略，即`mysql -u root -p`
