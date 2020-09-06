@@ -87,3 +87,66 @@ var n2 = Math.max.apply(Math, arr);
 var n3 = Math.max.call(null, ...arr);
 var n4 = Math.max(...arr);
 ```
+
+## list转tree结构
+
+#### 遍历方法
+```javascript
+function listToTree(list) {
+    const map = {}
+    const root = []
+    resource.forEach(v => {
+        v.children = []
+        map[v.id] = v
+        if (v.parent_id === 0) {
+            root.push(v)
+        } else {
+            map[v.parent_id].children.push(v)
+        }
+    })
+    return root
+}
+```
+
+#### 递归方法
+
+```typescript
+/**
+ * 将list转换为树结构 同时加入antd tree组件必须的key和title childer字段
+ * @param list 数组列表 必须包含id name 属性
+ * @param parentKey 代表父id的字段名称 如 parent_id
+ * @param initValue 第一级的id值 默认 undefined, item.parent_id = -1 则从parent_id 为-1 的开始找
+ * @param primaryKey 唯一主键 默认id
+ */
+export function listToTree<T extends {id: number, name: string, title?: string}>(list: T[], parentKey: string, initValue: string|number|undefined = undefined, primaryKey = 'id') {
+  type TreeData = T & {
+    key: string|number,
+    title: string,
+    isLeaf: boolean,
+    children: TreeData[],
+  }
+  const formate: T[]= [], remainder: T[] = []
+  
+  initValue = initValue ? Number(initValue) : initValue
+  list.forEach((v: any) => {
+    // 将list中parentId等于initValue的放入到formate中
+    // 将不等于的 放入到remainder中
+    Number(v[parentKey]) === initValue ? formate.push(v) : remainder.push(v)
+  })
+  return formate.map(v => {
+    // @ts-ignore
+    const parentId = v[primaryKey]
+    const children = listToTree(remainder, parentKey, parentId)
+    const item: TreeData = {
+      ...v,
+      key: parentId,
+      title: v.title || v.name,
+      isLeaf: !Boolean(children.length),
+      children,
+    }
+    return item
+  })
+}
+
+```
+
