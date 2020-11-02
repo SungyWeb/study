@@ -69,7 +69,7 @@ GPU是将触发gpu“加速”的元素拿出来，单独放在一个合成层�
 
 建立了tcp链接后，浏览器和服务器就可以进行通信了。http中的数据就是在这个过程中传输的。
 
-![请求](./imgs/request.jpg)
+![请求](imgs/request.jpg)
 
 ![响应](./imgs/response.jpg)
 
