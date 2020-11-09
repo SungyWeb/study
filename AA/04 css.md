@@ -2,8 +2,8 @@
 
 # 目录
 
-1. [Input的size与maxlength 属性的区别？](#Input的size与maxlength 属性的区别？)
-2. [BFC IFC GFC FFC](#BFC IFC GFC FFC)
+1. [Input的size与maxlength 属性的区别？](#Input的size与maxlength-属性的区别？)
+2. [BFC IFC GFC FFC](#BFC-IFC-GFC-FFC)
 
 # Input的size与maxlength 属性的区别？
 
